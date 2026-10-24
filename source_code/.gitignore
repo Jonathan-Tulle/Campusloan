@@ -29,6 +29,9 @@ pnpm-debug.log*
 # Basis Data Lokal (dibuat otomatis via npm run seed)
 # -------------------------
 *.db
+*.db-shm
+*.db-wal
+*.db*
 *.sqlite
 *.sqlite3
 data/*.db

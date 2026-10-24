@@ -11,6 +11,9 @@ yarn-error.log*
 
 # Berkas Basis Data Lokal (Dibuat otomatis via "npm run seed")
 *.db
+*.db-shm
+*.db-wal
+*.db*
 *.sqlite
 *.sqlite3
 
