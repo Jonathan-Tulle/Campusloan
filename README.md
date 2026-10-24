@@ -65,9 +65,8 @@ npm install
 cd ../loan-service
 npm install
 
-# Instal dependensi testing di root source_code
+# Kembali ke folder root source_code
 cd ..
-npm install
 ```
 
 ---
@@ -123,20 +122,22 @@ Berikut data akun pengguna yang telah terdaftar di `loan.db`:
 
 ---
 
-## Menjalankan Pengujian Mandiri
+## Pengujian Layanan (Postman)
 
-Untuk memverifikasi modul autentikasi JWT dan katalog fasilitas kampus:
+Pengujian seluruh endpoint dilakukan menggunakan **Postman** sesuai spesifikasi pada dokumen tugas:
 
-Dari direktori `source_code/`:
-```bash
-node test_mahasiswa_1.js
-```
-
-Seluruh 10 skenario pengujian akan dieksekusi secara in-process dan harus menghasilkan status **100% LULUS**.
+1. Pastikan kedua layanan sudah berjalan (`npm run start:catalog` dan `npm run start:loan`).
+2. Gunakan akun uji yang terdaftar di atas untuk melakukan login:
+   - `POST http://localhost:3002/api/v1/auth/login`
+3. Gunakan token JWT yang diperoleh untuk mengakses endpoint yang dilindungi (Header `Authorization: Bearer <token>`).
+4. Uji endpoint katalog:
+   - `GET http://localhost:3001/api/v1/facilities` (daftar fasilitas)
+   - `GET http://localhost:3001/api/v1/facilities/:id` (detail fasilitas)
+5. Seluruh skenario pengujian (U01 s.d. U10) dan tangkapan layar respons dicatat pada Laporan Kelompok.
 
 ---
 
-## truktur Direktori Proyek
+## Struktur Direktori Proyek
 
 ```text
 source_code/
@@ -169,7 +170,6 @@ source_code/
 │   └── package.json
 ├── client/                           # [Mahasiswa 3] Klien terminal otomatis
 ├── postman/                          # [Mahasiswa 3] Postman collection
-├── test_mahasiswa_1.js               # Skrip pengujian mandiri Mahasiswa 1
 ├── package.json                      # Workspace root scripts
 └── .gitignore
 ```
