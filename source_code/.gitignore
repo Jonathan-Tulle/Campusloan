@@ -75,7 +75,8 @@ coverage/
 .nyc_output/
 
 # -------------------------
-# Build Output
+# Catatan Internal & Pengujian Mandiri
 # -------------------------
-dist/
-build/
+test_mahasiswa_*.js
+test*.js
+

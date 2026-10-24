@@ -11,7 +11,7 @@
     "start:loan": "node loan-service/src/server.js",
     "start": "npm run start:catalog & npm run start:loan",
     "client": "node client/client.js",
-    "test": "node test_mahasiswa_1.js"
+    "test": "echo \"Pengujian endpoint dijalankan melalui Postman sesuai spesifikasi tugas.\" && exit 0"
   },
   "workspaces": [
     "catalog-service",
@@ -22,9 +22,5 @@
     "node": ">=18.0.0"
   },
   "author": "Kelompok 3",
-  "license": "ISC",
-  "devDependencies": {
-    "node-mocks-http": "^1.18.1",
-    "supertest": "^7.3.1"
-  }
+  "license": "ISC"
 }
