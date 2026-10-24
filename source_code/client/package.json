@@ -1,0 +1,14 @@
+{
+  "name": "campusloan-client",
+  "version": "1.0.0",
+  "description": "Program Klien Terminal Otomatis — CampusLoan",
+  "main": "client.js",
+  "scripts": {
+    "start": "node client.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "Kelompok 3",
+  "license": "ISC"
+}

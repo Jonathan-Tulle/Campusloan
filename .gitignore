@@ -1,0 +1,36 @@
+# Dependensi Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Konfigurasi Lingkungan & Rahasia (Kecuali .env.example sebagai template)
+.env
+.env.*
+!.env.example
+
+# Berkas Basis Data Lokal (Dibuat otomatis via "npm run seed")
+*.db
+*.sqlite
+*.sqlite3
+
+# Pengaturan Editor & IDE (Mencegah jejak konfigurasi lokal)
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# File Sistem Operasi
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# File Log & Debug
+logs/
+*.log
+
+# Catatan Internal / Progres Pribadi
+PROGRESS.md
+*.docx
+
+

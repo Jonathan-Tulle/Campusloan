@@ -1,0 +1,21 @@
+{
+  "name": "catalog-service",
+  "version": "1.0.0",
+  "description": "Layanan Katalog Fasilitas Kampus — CampusLoan (Port 3001)",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "seed": "node data/seed.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.5.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "Kelompok 3",
+  "license": "ISC"
+}

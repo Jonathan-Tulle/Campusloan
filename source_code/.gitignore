@@ -1,0 +1,78 @@
+# =============================================================================
+# .gitignore — CampusLoan Source Code
+# =============================================================================
+
+# Dependensi Node.js — diinstal ulang via npm/yarn install
+node_modules/
+
+# Berkas log npm / yarn
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-debug.log*
+
+# -------------------------
+# Keamanan: Variabel Lingkungan & Rahasia
+# -------------------------
+# Berkas .env berisi secret key, password, dan konfigurasi sensitif.
+# .env.example DIPERBOLEHKAN masuk ke repo sebagai template kosong.
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+.env.staging
+!.env.example
+
+# -------------------------
+# Basis Data Lokal (dibuat otomatis via npm run seed)
+# -------------------------
+*.db
+*.sqlite
+*.sqlite3
+data/*.db
+catalog-service/data/*.db
+loan-service/data/*.db
+
+# -------------------------
+# Editor & IDE
+# -------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.project
+.classpath
+.settings/
+
+# -------------------------
+# Sistem Operasi
+# -------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# -------------------------
+# Log & Debug
+# -------------------------
+logs/
+*.log
+
+# -------------------------
+# Coverage & Testing
+# -------------------------
+coverage/
+.nyc_output/
+
+# -------------------------
+# Build Output
+# -------------------------
+dist/
+build/

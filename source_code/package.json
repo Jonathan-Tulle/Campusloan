@@ -1,0 +1,30 @@
+{
+  "name": "campusloan",
+  "version": "1.0.0",
+  "description": "Sistem Peminjaman Fasilitas Kampus Berbasis REST API (CampusLoan) — Kelompok 3",
+  "private": true,
+  "scripts": {
+    "seed:catalog": "node catalog-service/data/seed.js",
+    "seed:loan": "node loan-service/data/seed.js",
+    "seed": "npm run seed:catalog && npm run seed:loan",
+    "start:catalog": "node catalog-service/src/server.js",
+    "start:loan": "node loan-service/src/server.js",
+    "start": "npm run start:catalog & npm run start:loan",
+    "client": "node client/client.js",
+    "test": "node test_mahasiswa_1.js"
+  },
+  "workspaces": [
+    "catalog-service",
+    "loan-service",
+    "client"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "Kelompok 3",
+  "license": "ISC",
+  "devDependencies": {
+    "node-mocks-http": "^1.18.1",
+    "supertest": "^7.3.1"
+  }
+}
