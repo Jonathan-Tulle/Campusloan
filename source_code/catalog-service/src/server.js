@@ -23,8 +23,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Sajikan antarmuka Web GUI publik
-app.use(express.static(path.resolve(__dirname, '../public')));
 
 // Tolak request dengan Content-Type JSON yang tidak valid (body rusak)
 app.use((err, req, res, next) => {

@@ -24,8 +24,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Sajikan antarmuka Web GUI publik
-app.use(express.static(path.resolve(__dirname, '../public')));
 
 // Rute publik 
 app.use('/api/v1/auth', authRouter);
