@@ -161,8 +161,14 @@ function listLoans(req, res, next) {
   }
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// [BAGIAN MAHASISWA 3] KONTROL KEPEMILIKAN DATA & OTORISASI OPERASIONAL ADMIN
+// Tanggung Jawab: getLoanById (GET /loans/:id) & updateLoanStatus (PATCH /loans/:id)
+// ─────────────────────────────────────────────────────────────────────────────
+
 /**
  * GET /api/v1/loans/:id
+ * Tanggung Jawab: Mahasiswa 3
  * Melihat detail pengajuan tertentu.
  * Hanya pemilik pengajuan atau admin yang diizinkan mengakses.
  */
@@ -213,6 +219,7 @@ function getLoanById(req, res, next) {
 
 /**
  * PATCH /api/v1/loans/:id
+ * Tanggung Jawab: Mahasiswa 3
  * Menyetujui atau menolak pengajuan pending (khusus admin).
  */
 function updateLoanStatus(req, res, next) {
