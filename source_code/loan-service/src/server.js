@@ -5,6 +5,7 @@ require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 const express = require('express');
 const authRouter = require('./routes/auth');
+const loansRouter = require('./routes/loans');
 
 const app = express();
 const PORT = parseInt(process.env.LOAN_PORT, 10) || 3002;
@@ -12,17 +13,46 @@ const PORT = parseInt(process.env.LOAN_PORT, 10) || 3002;
 // Middleware global 
 app.use(express.json());
 
+// CORS - Memungkinkan akses dari browser dan inter-service
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+  next();
+});
+
+// Sajikan antarmuka Web GUI publik
+app.use(express.static(path.resolve(__dirname, '../public')));
+
 // Rute publik 
 app.use('/api/v1/auth', authRouter);
+
+// Rute transaksi peminjaman
+app.use('/api/v1/loans', loansRouter);
+
+// Root endpoint - informasi layanan
+app.get('/', (req, res) => {
+  res.status(200).json({
+    name: 'CampusLoan - Loan Service',
+    version: '1.0.0',
+    status: 'running',
+    port: PORT,
+    endpoints: {
+      health: '/health',
+      auth_login: '/api/v1/auth/login',
+      loans: '/api/v1/loans',
+      loan_detail: '/api/v1/loans/:id',
+    },
+  });
+});
 
 // Health check
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', service: 'loan-service', port: PORT });
 });
-
-// Placeholder untuk rute yang dikerjakan Mahasiswa 2 & 3 
-// Rute /api/v1/loans akan didaftarkan oleh Mahasiswa 2 (loan controller)
-// Middleware RBAC akan didaftarkan oleh Mahasiswa 2 (rbac middleware)
 
 // Tangani rute yang tidak dikenal
 app.use((req, res) => {

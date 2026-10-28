@@ -1,0 +1,931 @@
+{
+  "info": {
+    "_postman_id": "c1f7b880-992a-4db3-bc81-campusloan001",
+    "name": "CampusLoan - 10 Skenario Pengujian Resmi (U01-U10)",
+    "description": "Koleksi Pengujian Resmi Sistem Peminjaman Fasilitas Kampus Berbasis SOA dan REST API (CampusLoan). Memenuhi 10 skenario pengujian minimum sesuai dokumen spesifikasi tugas ABS 2026.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "CATALOG_BASE_URL",
+      "value": "http://localhost:3001"
+    },
+    {
+      "key": "LOAN_BASE_URL",
+      "value": "http://localhost:3002"
+    },
+    {
+      "key": "STUDENT_BUDI_TOKEN",
+      "value": ""
+    },
+    {
+      "key": "STUDENT_SARI_TOKEN",
+      "value": ""
+    },
+    {
+      "key": "ADMIN_TOKEN",
+      "value": ""
+    },
+    {
+      "key": "LOAN_ID_1",
+      "value": "1"
+    },
+    {
+      "key": "LOAN_ID_2",
+      "value": "2"
+    }
+  ],
+  "item": [
+    {
+      "name": "U01 - Otentikasi Login (Benar & Salah)",
+      "item": [
+        {
+          "name": "U01.1 - Login Berhasil (Mahasiswa Budi)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.test('Returns Bearer token', function () {",
+                  "    pm.expect(jsonData.data.token).to.be.a('string');",
+                  "    pm.collectionVariables.set('STUDENT_BUDI_TOKEN', jsonData.data.token);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"mhs_budi\",\n  \"password\": \"Budi#Pass2026\"\n}"
+            },
+            "url": {
+              "raw": "{{LOAN_BASE_URL}}/api/v1/auth/login",
+              "host": [
+                "{{LOAN_BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "U01.2 - Login Gagal (Password Salah)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 401', function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.test('Returns INVALID_CREDENTIALS error', function () {",
+                  "    pm.expect(jsonData.error.code).to.eql('INVALID_CREDENTIALS');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"mhs_budi\",\n  \"password\": \"PasswordSalah123\"\n}"
+            },
+            "url": {
+              "raw": "{{LOAN_BASE_URL}}/api/v1/auth/login",
+              "host": [
+                "{{LOAN_BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "U02 - Membaca Katalog & Sifat Aman GET",
+      "item": [
+        {
+          "name": "U02.1 - GET Daftar Fasilitas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.test('Contains facilities list', function () {",
+                  "    pm.expect(jsonData.data.facilities).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{STUDENT_BUDI_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{CATALOG_BASE_URL}}/api/v1/facilities",
+              "host": [
+                "{{CATALOG_BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "facilities"
+              ]
+            }
+          }
+        },
+        {
+          "name": "U02.2 - GET Detail Fasilitas 1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.test('Returns facility id 1', function () {",
+                  "    pm.expect(jsonData.data.id).to.eql(1);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{STUDENT_BUDI_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{CATALOG_BASE_URL}}/api/v1/facilities/1",
+              "host": [
+                "{{CATALOG_BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "facilities",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "U02.3 - Ulangi GET Fasilitas (Bukti Safe Method)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 without side effects', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{STUDENT_BUDI_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{CATALOG_BASE_URL}}/api/v1/facilities",
+              "host": [
+                "{{CATALOG_BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "facilities"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "U03 - Mahasiswa Membuat Pengajuan Valid",
+      "item": [
+        {
+          "name": "U03.1 - Pengajuan Peminjaman Valid (201 Created)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 201 Created', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.test('Status is pending and borrower matches token', function () {",
+                  "    pm.expect(jsonData.data.status).to.eql('pending');",
+                  "    pm.collectionVariables.set('LOAN_ID_1', jsonData.data.id);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{STUDENT_BUDI_TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"facility_id\": 1,\n  \"start_at\": \"2026-11-10T08:00:00+07:00\",\n  \"end_at\": \"2026-11-10T11:00:00+07:00\",\n  \"purpose\": \"Seminar Proposal Penelitian Mahasiswa\"\n}"
+            },
+            "url": {
+              "raw": "{{LOAN_BASE_URL}}/api/v1/loans",
+              "host": [
+                "{{LOAN_BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "loans"
+              ]
+            }
+          }
+        },
+        {
+          "name": "U03.2 - Pengajuan Peminjaman Kedua (Untuk Ditolak Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 201 Created', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set('LOAN_ID_2', jsonData.data.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{STUDENT_BUDI_TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"facility_id\": 2,\n  \"start_at\": \"2026-11-11T13:00:00+07:00\",\n  \"end_at\": \"2026-11-11T16:00:00+07:00\",\n  \"purpose\": \"Peminjaman Proyektor untuk Praktikum\"\n}"
+            },
+            "url": {
+              "raw": "{{LOAN_BASE_URL}}/api/v1/loans",
+              "host": [
+                "{{LOAN_BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "loans"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "U04 - Admin Menyetujui & Menolak Pengajuan",
+      "item": [
+        {
+          "name": "U04.1 - Admin Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Admin login status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set('ADMIN_TOKEN', jsonData.data.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin_kampus\",\n  \"password\": \"Admin#Pass2026\"\n}"
+            },
+            "url": {
+              "raw": "{{LOAN_BASE_URL}}/api/v1/auth/login",
+              "host": [
+                "{{LOAN_BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "U04.2 - Admin Menyetujui Pengajuan 1 (Approved)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 OK', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.test('Status is now approved', function () {",
+                  "    pm.expect(jsonData.data.status).to.eql('approved');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"approved\"\n}"
+            },
+            "url": {
+              "raw": "{{LOAN_BASE_URL}}/api/v1/loans/{{LOAN_ID_1}}",
+              "host": [
+                "{{LOAN_BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "loans",
+                "{{LOAN_ID_1}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "U04.3 - Admin Menolak Pengajuan 2 (Rejected)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200 OK', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.test('Status is now rejected', function () {",
+                  "    pm.expect(jsonData.data.status).to.eql('rejected');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{ADMIN_TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"rejected\"\n}"
+            },
+            "url": {
+              "raw": "{{LOAN_BASE_URL}}/api/v1/loans/{{LOAN_ID_2}}",
+              "host": [
+                "{{LOAN_BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "loans",
+                "{{LOAN_ID_2}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "U05 - Waktu Tidak Valid & Bentrok Jadwal",
+      "item": [
+        {
+          "name": "U05.1 - Tolak Waktu Selesai Sebelum Mulai (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 400 Bad Request', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{STUDENT_BUDI_TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"facility_id\": 1,\n  \"start_at\": \"2026-11-15T14:00:00+07:00\",\n  \"end_at\": \"2026-11-15T12:00:00+07:00\",\n  \"purpose\": \"Waktu selesai sebelum mulai\"\n}"
+            },
+            "url": {
+              "raw": "{{LOAN_BASE_URL}}/api/v1/loans",
+              "host": [
+                "{{LOAN_BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "loans"
+              ]
+            }
+          }
+        },
+        {
+          "name": "U05.2 - Tolak Jadwal Bertumpang Tindih (409 Conflict)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 409 Conflict', function () {",
+                  "    pm.response.to.have.status(409);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.test('Error code is SCHEDULE_CONFLICT', function () {",
+                  "    pm.expect(jsonData.error.code).to.eql('SCHEDULE_CONFLICT');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{STUDENT_BUDI_TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"facility_id\": 1,\n  \"start_at\": \"2026-11-10T09:00:00+07:00\",\n  \"end_at\": \"2026-11-10T12:00:00+07:00\",\n  \"purpose\": \"Bentrok dengan Pengajuan 1 yang disetujui\"\n}"
+            },
+            "url": {
+              "raw": "{{LOAN_BASE_URL}}/api/v1/loans",
+              "host": [
+                "{{LOAN_BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "loans"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "U06 - Panggil Endpoint Tanpa Token",
+      "item": [
+        {
+          "name": "U06.1 - Akses GET /loans Tanpa Token (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 401 Unauthorized', function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.test('Error code is TOKEN_MISSING', function () {",
+                  "    pm.expect(jsonData.error.code).to.eql('TOKEN_MISSING');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{LOAN_BASE_URL}}/api/v1/loans",
+              "host": [
+                "{{LOAN_BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "loans"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "U07 - Panggil Endpoint dengan Token Expired",
+      "item": [
+        {
+          "name": "U07.1 - Akses dengan Token Kedaluwarsa (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 401 Unauthorized', function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.test('Error code is TOKEN_EXPIRED', function () {",
+                  "    pm.expect(jsonData.error.code).to.eql('TOKEN_EXPIRED');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIsInVzZXJuYW1lIjoibWhzX2J1ZGkiLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTYwMDAwMDAwMCwiZXhwIjoxNjAwMDAwMDAxfQ.d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d2d"
+              }
+            ],
+            "url": {
+              "raw": "{{LOAN_BASE_URL}}/api/v1/loans",
+              "host": [
+                "{{LOAN_BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "loans"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "U08 - Manipulasi Payload Role JWT",
+      "item": [
+        {
+          "name": "U08.1 - Akses PATCH dengan Token Hasil Manipulasi (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 401 Unauthorized', function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.test('Error code is TOKEN_INVALID', function () {",
+                  "    pm.expect(jsonData.error.code).to.eql('TOKEN_INVALID');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIsInVzZXJuYW1lIjoibWhzX2J1ZGkiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE5MDAwMDAwMDAsImV4cCI6MTkwMDAwMzYwMH0.tampered_signature_without_valid_secret"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"approved\"\n}"
+            },
+            "url": {
+              "raw": "{{LOAN_BASE_URL}}/api/v1/loans/1",
+              "host": [
+                "{{LOAN_BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "loans",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "U09 - Mahasiswa Mencoba Menyetujui Pengajuan",
+      "item": [
+        {
+          "name": "U09.1 - Mahasiswa Panggil PATCH /loans/:id (403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 403 Forbidden', function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.test('Error code is FORBIDDEN', function () {",
+                  "    pm.expect(jsonData.error.code).to.eql('FORBIDDEN');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{STUDENT_BUDI_TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"approved\"\n}"
+            },
+            "url": {
+              "raw": "{{LOAN_BASE_URL}}/api/v1/loans/1",
+              "host": [
+                "{{LOAN_BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "loans",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "U10 - Isolasi Kepemilikan Data Mahasiswa",
+      "item": [
+        {
+          "name": "U10.1 - Login Mahasiswa Sari",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login Sari status is 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set('STUDENT_SARI_TOKEN', jsonData.data.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"mhs_sari\",\n  \"password\": \"Sari#Pass2026\"\n}"
+            },
+            "url": {
+              "raw": "{{LOAN_BASE_URL}}/api/v1/auth/login",
+              "host": [
+                "{{LOAN_BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "U10.2 - Mahasiswa Sari Akses Data Milik Mahasiswa Budi (403)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 403 Forbidden', function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.test('Error code is FORBIDDEN', function () {",
+                  "    pm.expect(jsonData.error.code).to.eql('FORBIDDEN');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{STUDENT_SARI_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{LOAN_BASE_URL}}/api/v1/loans/{{LOAN_ID_1}}",
+              "host": [
+                "{{LOAN_BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "loans",
+                "{{LOAN_ID_1}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "U10.3 - Mahasiswa Budi Memalsukan borrower_id pada Body",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 201 Created', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.test('Borrower ID remains from token (not body)', function () {",
+                  "    pm.expect(jsonData.data.borrower_id).to.eql(2);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{STUDENT_BUDI_TOKEN}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"facility_id\": 3,\n  \"borrower_id\": 99,\n  \"start_at\": \"2026-11-20T10:00:00+07:00\",\n  \"end_at\": \"2026-11-20T12:00:00+07:00\",\n  \"purpose\": \"Mencoba spoofing borrower_id\"\n}"
+            },
+            "url": {
+              "raw": "{{LOAN_BASE_URL}}/api/v1/loans",
+              "host": [
+                "{{LOAN_BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "loans"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

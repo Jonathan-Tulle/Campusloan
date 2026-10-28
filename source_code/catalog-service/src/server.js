@@ -12,6 +12,20 @@ const PORT = parseInt(process.env.CATALOG_PORT, 10) || 3001;
 // Middleware global 
 app.use(express.json());
 
+// CORS - Memungkinkan akses dari browser dan inter-service
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+  next();
+});
+
+// Sajikan antarmuka Web GUI publik
+app.use(express.static(path.resolve(__dirname, '../public')));
+
 // Tolak request dengan Content-Type JSON yang tidak valid (body rusak)
 app.use((err, req, res, next) => {
   if (err.type === 'entity.parse.failed') {
@@ -28,6 +42,21 @@ app.use((err, req, res, next) => {
 
 // Rute 
 app.use('/api/v1/facilities', facilitiesRouter);
+
+// Root endpoint - informasi layanan
+app.get('/', (req, res) => {
+  res.status(200).json({
+    name: 'CampusLoan - Catalog Service',
+    version: '1.0.0',
+    status: 'running',
+    port: PORT,
+    endpoints: {
+      health: '/health',
+      facilities: '/api/v1/facilities',
+      facility_detail: '/api/v1/facilities/:id',
+    },
+  });
+});
 
 // Health check - tidak memerlukan autentikasi
 app.get('/health', (req, res) => {
